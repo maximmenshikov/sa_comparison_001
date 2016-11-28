@@ -30,6 +30,6 @@ int main()
     expr->dump(str);
 
     std::cout << str << " = ";
-    std::cout << expr->eval();
+    std::cout << result;
     // no return, memory leak
 }
