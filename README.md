@@ -1,1 +1,3 @@
-# sa_comparison_001
+# Buggy calculator
+
+Only for static analyzer comparison.
