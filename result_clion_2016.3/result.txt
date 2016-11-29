@@ -1,0 +1,19 @@
+OK Parser.cpp:5 "c != '-'" Condition is always true when reached.
+
+OK Parser.cpp:13 "c = '/'" Condition is always true.
+
+OK Parser.cpp:21 "return Minus" Unreachable code.
+
+OK BinaryExpression.cpp:36 Local variable 'res' might not have been initialized.
+
+OK Parser.cpp:38 Local variable 'expr' might not have been initialized. Initialize local variable 'expr'.
+
+OK Parser.cpp:13 Using '=' in conditional expression.
+
+OK BinaryExpression.cpp:22 Not all switch cases were handled.
+
+OK LiteralExpression.cpp:8 Values of type 'int' may not fit into the receiver type 'char'.
+
+OK BinaryExpression.cpp:29 The value is never used. Remove statement and leave initializer.
+
+OK Parser.cpp:13 The value is never used.
