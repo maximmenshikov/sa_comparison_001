@@ -1,0 +1,303 @@
+BinaryExpression.cpp:29
+In fact:
+What? Value stored to 'res' is never read.
+When? In case op == Multiply.
+Where? BinaryExpression.cpp:29, executable file bugdetection_exec.
+Who? maximmenshchikov, commit 7d792061b7da4f57029adf383a5e3237d3dbb4c7.
+Why? BinaryExpression.cpp:30: missing break.
+How to fix? Add break;
+
+Clang 3.8 (correct):
+What? Dead assignment.
+When? -
+Where? (50%) BinaryExpression.cpp:29.
+Who? -
+Why? Value stored to 'res' is never read.
+How to fix? -
+
+CLion 2016.3 (correct):
+What? The value is never used.
+When? -
+Where? (50%) BinaryExpression.cpp:29.
+Who? -
+Why? -
+How to fix? Remove statement and leave initializer.
+
+PVS-Studio Linux (correct):
+What? The 'res' variable is assigned values twice successively.
+When? -
+Where? (100%) BinaryExpression.cpp:31. Check lines: 29, 31.
+Who? -
+Why? (50%) Perhaps this is a mistake.
+How to fix? -
+
+--------------------------------------------------------------------------------
+Parser.cpp:38
+In fact:
+What? Garbage return value.
+When? In case (c < '0' || c > '9')
+Where? Parser.cpp:38, executable file bugdetection_exec.
+Who? maximmenshchikov, commit 7d792061b7da4f57029adf383a5e3237d3dbb4c7.
+Why? 'expr' declared without an initial value.
+How to fix? Initialize 'expr' with nullptr.
+
+Clang 3.8 (correct):
+What? Undefined or garbage value returned to caller.
+When? (80%) 1) Calling 'Parser::parseLiteral'. 2) 'expr' declared without an initial value. 3) Undefined or garbage value returned to caller.
+Where? Parser.cpp:38
+Who? -
+Why? 'expr' declared without an initial value.
+How to fix? -
+
+CLion 2016.3 (correct):
+What? Local variable 'expr' might not have been initialized.
+When? -
+Where? Parser.cpp:38
+Who? -
+Why? -
+How to fix? Initialize local variable 'expr'.
+
+PVS-Studio Linux(correct):
+What? Potentially uninitialized pointer 'expr' used.
+When?
+Where? Parser.cpp:38
+Who? -
+Why? -
+How to fix? -
+
+--------------------------------------------------------------------------------
+BinaryExpression.cpp:36
+In fact:
+What? Undefined or garbage value returned to caller.
+When? In case op == Divide.
+Where? BinaryExpression.cpp:36, executable file bugdetection_exec.
+Who? maximmenshchikov, commit 7d792061b7da4f57029adf383a5e3237d3dbb4c7.
+Why? 'res' declared without an initial value
+How to fix? Initialize res with nullptr.
+
+Clang 3.8 (correct):
+What? Undefined or garbage value returned to caller.
+When? 1) 'res' declared without an initial value 2) 'Default' branch taken. Execution continues on line 36 3) Undefined or garbage value returned to caller
+Where? BinaryExpression.cpp:36
+Who? -
+Why? 'res' declared without an initial value
+How to fix? -
+
+CLion 2016.3 (correct):
+What? Local variable 'res' might not have been initialized.
+When? -
+Where? BinaryExpression.cpp:36
+Who? -
+Why? -
+How to fix? Initialize local variable 'res'.
+
+--------------------------------------------------------------------------------
+Parser.cpp:5
+In fact:
+What? Redundant condition: c != '-'
+Who? maximmenshchikov, commit 7d792061b7da4f57029adf383a5e3237d3dbb4c7.
+Where? Parser.cpp:5, executable file bugdetection_exec.
+When? In case "c == '+'" condition succeeds.
+Why? Condition is always true when reached.
+How to fix? Remove expression.
+
+CLion 2016.3 (correct):
+What? "c != '-'" Condition is always true when reached.
+When? -
+Where? Parser.cpp:5
+Who? -
+Why? -
+How to fix? 1) Simplify expression. 2) Simplify condition to 'true'.
+
+cppcheck 1.76 (correct):
+What? Redundant condition: If 'c == '+''.
+When? -
+Where? Parser.cpp:5
+Who? -
+Why? The comparison 'c != '-'' is always true.
+How to fix? -
+
+PVS-Studio Linux (correct):
+What? Consider inspecting the 'c == '+' && c != '-'' expression.
+When? -
+Where? Parser.cpp:5
+Who? -
+Why? (30%) The expression is excessive or contains a misprint.
+How to fix? -
+
+--------------------------------------------------------------------------------
+Parser.cpp:13
+In fact:
+What? "c = '/'" Condition is always true.
+When? -
+Where? Parser.cpp:13, executable file bugdetection_exec.
+Who? maximmenshchikov, commit 7d792061b7da4f57029adf383a5e3237d3dbb4c7.
+Why? Typo. '==' must be used.
+How to fix? Change '=' to '=='.
+
+CLion 2016.3 (incorrect):
+What? "c = '/'" Condition is always true.
+When? -
+Where? (50%) Parser.cpp:13.
+Who? -
+Why? -
+How to fix? 1) Simplify 'if' statement 2) Simplify condition to 'true'.
+
+CLion 2016.3 (incorrect):
+What? Using '=' in conditional expression.
+When? -
+Where? (50%) Parser.cpp:13.
+Who? -
+Why? -
+How to fix? 1) Place parenthesis around. 2) Extract assignment.
+
+CLion 2016.3 (incorrect):
+What? "c = '/'" The value is never used.
+When? -
+Where? (50%) Parser.cpp:13
+Who? -
+Why? -
+How to fix? -
+
+PVS-Studio Linux (correct):
+What? Suspicious assignment inside the condition expression of 'if' operator: c = '/'.
+When? -
+Where? Parser.cpp:13, inside the condition expression of 'if' operator.
+Who? -
+Why? -
+How to fix? -
+
+--------------------------------------------------------------------------------
+Parser.cpp:21 (Parser.cpp:13)
+In fact:
+What? "return Minus" Unreachable code.
+When?
+Where? Parser.cpp:21, executable file bugdetection_exec.
+Who? maximmenshchikov, commit 7d792061b7da4f57029adf383a5e3237d3dbb4c7.
+Why? Typo. '==' must be used.
+How to fix? Change '=' to '=='.
+
+CLion 2016.3 (correct):
+What? "return Minus" Unreachable code.
+When?
+Where? Parser.cpp:21.
+Who? -
+Why? -
+How to fix? -
+
+--------------------------------------------------------------------------------
+BinaryExpression.cpp:22
+In fact:
+What? Not all switch cases were handled.
+When? 'Divide' enum member.
+Where? BinaryExpression.cpp:22, executable file bugdetection_exec.
+Who? maximmenshchikov, commit 7d792061b7da4f57029adf383a5e3237d3dbb4c7.
+Why? -
+How to fix? Add specific or 'default' switch case.
+
+CLion 2016.3 (correct):
+What? Not all switch cases were handled.
+When? -
+Where? BinaryExpression.cpp:22
+Who? -
+Why? -
+How to fix? -
+
+PVS-Studio Linux (correct):
+What? The switch statement does not cover all values of the enum.
+When? 'Divide' enum member.
+Where? BinaryExpression.cpp:22
+Who? -
+Why? -
+How to fix? -
+
+--------------------------------------------------------------------------------
+LiteralExpression.cpp:8
+In fact:
+What? Values of type 'int' may not fit into the receiver type 'char'.
+When? If value is bigger than 255 (or < 0 in case of signed int)
+Where? LiteralExpression.cpp:8, executable file bugdetection_exec.
+Who? maximmenshchikov, commit 7d792061b7da4f57029adf383a5e3237d3dbb4c7.
+Why? size of 'int' type is bigger than size of 'char'.
+How to fix? 1) Use type int instead of char. 2) Add an assertion that 'int' value is in valid range.
+
+CLion 2016.3 (correct):
+What? Values of type 'int' may not fit into the receiver type 'char'.
+When? -
+Where? LiteralExpression.cpp:8
+Who? -
+Why? -
+How to fix? -
+
+
+--------------------------------------------------------------------------------
+Parser.cpp:61 {notfullsupport}
+In fact:
+What? Unexpected casting problems might arise.
+When? Compiler-specific.
+Where? Parser.cpp:61, executable file bugdetection_exec.
+Who? maximmenshchikov, commit 7d792061b7da4f57029adf383a5e3237d3dbb4c7.
+Why? C-style pointer detected. It might lead to unexpected casting problems.
+How to fix? Use static_Cast, const_cast, dynamic_cast or reinterpret_cast.
+
+cppcheck 1.76 (correct):
+What? -
+When? -
+Where? Parser.cpp:61
+Who? -
+Why? C-style pointer casting detected. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.
+How to fix? C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast.
+
+--------------------------------------------------------------------------------
+main.cpp:9 {notfullsupport}
+In fact:
+What? Unexpected casting problems might arise.
+When? Compiler-specific.
+Where? main.cpp:9, executable file bugdetection_exec.
+Who? maximmenshchikov, commit 7d792061b7da4f57029adf383a5e3237d3dbb4c7.
+Why? C-style pointer detected. It might lead to unexpected casting problems.
+How to fix? Use static_Cast, const_cast, dynamic_cast or reinterpret_cast.
+
+cppcheck 1.76 (correct):
+What? -
+When? -
+Where? main.cpp:9
+Who? -
+Why? C-style pointer casting detected. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.
+How to fix? C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast.
+
+--------------------------------------------------------------------------------
+BinaryExpression.hpp:13: {notfullsupport}
+In fact:
+What? Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior.
+When? If member values are not assigned.
+Where? BinaryExpression.hpp:13, executable file bugdetection_exec
+Who? maximmenshchikov, commit 7d792061b7da4f57029adf383a5e3237d3dbb4c7.
+Why? The class 'BinaryExpression' does not have a constructor although it has private member variables.
+How to fix? Create a constructor and initialize values.
+
+cppcheck 1.76 (correct):
+What? Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior.
+When? -
+Where? BinaryExpression.hpp:13
+Who? -
+Why? The class 'BinaryExpression' does not have a constructor although it has private member variables.
+How to fix? -
+
+--------------------------------------------------------------------------------
+LiteralExpression.hpp:4 {notfullsupport}
+In fact:
+What? Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior.
+When? If member values are not assigned.
+Where? LiteralExpression.hpp:4, executable file bugdetection_exec
+Who? maximmenshchikov, commit 7d792061b7da4f57029adf383a5e3237d3dbb4c7.
+Why? The class 'LiteralExpression' does not have a constructor although it has private member variables.
+How to fix? Create a constructor and initialize values.
+
+cppcheck 1.76 (correct):
+What? Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior.
+When? -
+Where? LiteralExpression.hpp:4
+Who? -
+Why? The class 'LiteralExpression' does not have a constructor although it has private member variables.
+How to fix? -
